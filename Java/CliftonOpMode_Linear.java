@@ -62,6 +62,7 @@ public class CliftonOpMode_Linear extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private Servo servoTest;
 
 
     @Override
@@ -74,6 +75,7 @@ public class CliftonOpMode_Linear extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        servoTest = hardwareMap.get(Servo.class, "servoTest");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -109,6 +111,19 @@ public class CliftonOpMode_Linear extends LinearOpMode {
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+
+            // check to see if we need to move the servo.
+            if(gamepad1.y) {
+                // move to 0 degrees.
+                servoTest.setPosition(0);
+            } else if (gamepad1.x || gamepad1.b) {
+                // move to 90 degrees.
+                servoTest.setPosition(0.5);
+            } else if (gamepad1.a) {
+                // move to 180 degrees.
+                servoTest.setPosition(1);
+            }
+            telemetry.addData("Servo Position", servoTest.getPosition());
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
