@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.TextTracker;
@@ -33,6 +35,7 @@ public class LuisOpModeLiear extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor armDrive =null;
+    private Servo armservo =null;
 
     @Override
     public void runOpMode() {
@@ -45,52 +48,71 @@ public class LuisOpModeLiear extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+        armservo = hardwareMap.get(Servo.class,"arm_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
+        // Reverse the motor that runs backwards when connected directly to the ba[==.ttery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         armDrive.setDirection(DcMotor.Direction.FORWARD);
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
-            double armPower;
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            double up = gamepad2.right_stick_y;
-            double down = -gamepad2.right_stick_y;
 
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-            //armPower   = Range.clip(up - down, -0.5, 0.5) ;
+            // Wait for the game to start (driver presses PLAY)
+            waitForStart();
+            runtime.reset();
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            // run until the end of the match (driver presses STOP)
+                while (opModeIsActive()) {
 
-            // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
-            armDrive.setPower(armPower);
+                    // Setup a variable for each drive wheel to save power level for telemetry
+                    double leftPower;
+                    double rightPower;
+                    double armPower;
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.update();
-        }
-    }
-}
+
+
+                    //move to 0 degress
+                  if (gamepad2.a) {
+                      armservo.setPosition(0);
+                      //moving
+                  } else if (gamepad2.b) {
+                      armservo.setPosition (0.5);
+                  }
+
+
+                    // Choose to drive using either Tank Mode, or POV Mode
+                    // Comment out the method that's not used.  The default below is POV.
+
+                    // POV Mode uses left stick to go forward, and right stick to turn.
+                    // - This uses basic math to combine motions and is easier to drive straight.
+                    double drive = -gamepad1.left_stick_y;
+                    double turn = gamepad1.right_stick_x;
+                    double up = gamepad2.right_stick_y;
+                    double down = -gamepad2.left_stick_y;
+
+
+                    leftPower = Range.clip(drive + turn, -1.0, 1.0);
+                    rightPower = Range.clip(drive - turn, -1.0, 1.0);
+                    armPower = Range.clip(up - down, -0.5, 0.5);
+
+
+                    // Tank Mode uses one stick to control each wheel.
+                    // - This requires no math, but it is hard to drive forward slowly and keep straight.
+                    // leftPower  = -gamepad1.left_stick_y ;
+                    // rightPower = -gamepad1.right_stick_y ;
+
+                    // Send calculated power to wheels
+                    leftDrive.setPower(leftPower);
+                    rightDrive.setPower(rightPower);
+                    armDrive.setPower(armPower);
+
+
+                    // Show the elapsed game time and wheel power.
+                    telemetry.addData("Status", "Run Time: " + runtime.toString());
+                    telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+                    telemetry.addData("Servo Position", armservo.getPosition());
+                    telemetry.update();
+                } } }
