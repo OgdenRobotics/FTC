@@ -5,12 +5,18 @@ import android.text.style.UpdateAppearance;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.CRServo;
+//import com.qualcomm.robotcore.hardware.CRServoImpl;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.TextTracker;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
 
 
 /**
@@ -35,7 +41,9 @@ public class LuisOpModeLiear extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor armDrive =null;
-    private Servo armservo =null;
+  //  private Servo armservo;
+
+    double servoPosition = 0.5;
 
     @Override
     public void runOpMode() {
@@ -48,7 +56,8 @@ public class LuisOpModeLiear extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
-        armservo = hardwareMap.get(Servo.class,"arm_servo");
+        //armservo = hardwareMap.get (Servo.class,"arm_servo");
+       // armservo = hardwareMap.servo.get("arm_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the ba[==.ttery
@@ -74,16 +83,28 @@ public class LuisOpModeLiear extends LinearOpMode {
 
 
 
-                    //move to 0 degress
-                  if (gamepad2.a) {
-                      armservo.setPosition(0);
-                      //moving
-                  } else if (gamepad2.b) {
-                      armservo.setPosition (0.5);
-                  }
+                    // check to see if we need to move the servo.
+                    //if (gamepad2.dpad_left) {
+                        // move to 0 degrees.
+                        //armservo.setPosition(0);
+                    //} else if (gamepad1.dpad_right) {
+                        // move to 90 degrees.
+                        //armservo.setPosition(0.5);
+                    //}
 
 
-                    // Choose to drive using either Tank Mode, or POV Mode
+//
+////                    // check to see if we need to move the servo.
+//                    if (gamepad2.dpad_left) {
+//                       servoPosition -= .01;
+////                        Ex. servoPosition -= 5;
+//                    }else if (gamepad2.dpad_right) {
+//                        servoPosition += .01;
+//                   }
+//                   armservo.setPosition(servoPosition);
+
+
+                        // Choose to drive using either Tank Mode, or POV Mode
                     // Comment out the method that's not used.  The default below is POV.
 
                     // POV Mode uses left stick to go forward, and right stick to turn.
@@ -97,6 +118,7 @@ public class LuisOpModeLiear extends LinearOpMode {
                     leftPower = Range.clip(drive + turn, -1.0, 1.0);
                     rightPower = Range.clip(drive - turn, -1.0, 1.0);
                     armPower = Range.clip(up - down, -0.5, 0.5);
+                  //  servoPosition = Range.clip (servoPosition,0,1);
 
 
                     // Tank Mode uses one stick to control each wheel.
@@ -113,6 +135,6 @@ public class LuisOpModeLiear extends LinearOpMode {
                     // Show the elapsed game time and wheel power.
                     telemetry.addData("Status", "Run Time: " + runtime.toString());
                     telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-                    telemetry.addData("Servo Position", armservo.getPosition());
+                    //telemetry.addData("Servo", armservo.getPosition());
                     telemetry.update();
                 } } }
