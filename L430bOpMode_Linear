@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+//package org.firstinspires.ftc.teamcode;
 
 import android.text.style.UpdateAppearance;
 
@@ -55,16 +55,22 @@ public class LuisOpModeLiear extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         armDrive.setDirection(DcMotor.Direction.FORWARD);
-        armservo.setPosition(0);
-        if (gamepad2.a) {
-        armservo.setPosition(0.5);
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
+        double position = 0;
         while (opModeIsActive()) {
+            armservo.setPosition(position);
+
+            if (gamepad2.a) {
+                position = .5;
+            } else {
+                position = 0;
+            }
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
@@ -101,7 +107,7 @@ public class LuisOpModeLiear extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Position value", "%b",  position = 0);
             telemetry.update();
         }
-    }
-}
+    } }
