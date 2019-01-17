@@ -1,0 +1,368 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import android.text.style.UpdateAppearance;
+
+
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import com.qualcomm.robotcore.hardware.CRServo;
+
+//import com.qualcomm.robotcore.hardware.CRServoImpl;
+
+import com.qualcomm.robotcore.hardware.CRServoImpl;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+
+import com.qualcomm.robotcore.hardware.Servo;
+
+
+
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
+
+
+
+
+
+/**
+
+ * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+
+ * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+
+ * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
+
+ * class is instantiated on the Robot Controller and executed.
+
+ *
+
+ * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+
+ * It includes all the skeletal structure that all linear OpModes contain.
+
+ *
+
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+
+ */
+
+
+
+@TeleOp(name="L430b: Linear OpMode", group="Linear Opmode")
+
+//@Disabled
+
+public class TylerandOscarCode extends LinearOpMode {
+
+
+
+    // Declare OpMode members.
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private DcMotor leftDrive = null;
+
+    private DcMotor rightDrive = null;
+
+    private DcMotor armDrive =null;
+
+    private DcMotor armString = null;
+
+    private CRServo servo1 = null;
+
+    private CRServo servo2 = null;
+
+    private DistanceSensor sensorRange;
+
+    private ColorSensor colorSensor;
+
+
+    //private Rev2mDistanceSensor sensorRange;
+
+
+
+    double servoPosition = 0.5;
+
+
+
+    @Override
+
+    public void runOpMode() {
+
+        telemetry.addData("Status", "Initialized");
+
+        telemetry.update();
+
+
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+
+        // to 'get' must correspond to the names assigned during the robot configuration
+
+        // step (using the FTC Robot Controller app on the phone).
+
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
+        armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+
+        armString = hardwareMap.get(DcMotor.class, "arm_string");
+
+        servo1 = hardwareMap.get (CRServo.class,"CRServo1");
+
+        servo2 = hardwareMap.get(CRServo.class,"CRServo2");
+
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+
+         // armservo = hardwareMap.servo.get("arm_servo");
+
+
+
+        // Most robots need the motor on one side to be reversed to drive forward
+
+        // Reverse the motor that runs backwards when connected directly to the ba[==.ttery
+
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        armDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        armString.setDirection(DcMotor.Direction.FORWARD);
+
+
+
+
+
+        telemetry.addData("Initial Servo position:", servo1.getDirection());
+
+        telemetry.addData("Initial Servo Connection information:", "%s", servo1.getConnectionInfo());
+
+        // Wait for the game to start (driver presses PLAY)
+
+        waitForStart();
+
+        runtime.reset();
+
+
+
+        // run until the end of the match (driver presses STOP)
+
+        while (opModeIsActive()) {
+            //arm motor activation
+
+            if (gamepad2.dpad_up) {
+
+                armDrive.setPower(0.8);
+
+            }
+
+            else
+
+                armDrive.setPower(0);
+
+
+
+            if (gamepad2.dpad_down) {
+
+                armDrive.setPower(-0.8);
+
+            } else
+
+                armDrive.setPower(0);
+
+
+
+            //stringed motor activation
+
+            if (gamepad2.right_bumper)
+
+            {
+
+                armString.setPower(1.1);
+
+            }
+
+            else
+
+                armString.setPower(0);
+
+
+
+
+
+            if (gamepad2.left_bumper)
+
+            {
+
+                armString.setPower(-1.3);
+
+            }
+
+            else
+
+                armString.setPower(0);
+
+
+
+
+            // Setup a variable for each drive wheel to save power level for telemetry
+
+            double leftPower;
+
+            double rightPower;
+
+            double armPower;
+
+            double stringPower;
+
+            if (gamepad2.a){
+
+                servo1.setDirection(CRServo.Direction.FORWARD);
+
+                telemetry.addData("Servo changed position:", "%.2f", .5);
+
+                servo1.setPower(servoPosition);
+
+            } else if (gamepad2.b) {
+
+                servo1.setDirection(CRServo.Direction.REVERSE);
+
+                servo1.setPower(servoPosition);
+
+            } else {
+
+                telemetry.addData("Servo changed position:",  "%.2f", .0);
+
+                servo1.setPower(0);
+
+            }
+            //Servo 2
+            if (gamepad2.y){
+
+                servo2.setDirection(CRServo.Direction.FORWARD);
+
+                telemetry.addData("Servo changed position:", "%.2f", .5);
+
+                servo2.setPower(servoPosition);
+
+            } else if (gamepad2.x) {
+
+                servo2.setDirection(CRServo.Direction.REVERSE);
+
+                servo2.setPower(servoPosition);
+
+            } else {
+
+                telemetry.addData("Servo changed position:",  "%.2f", .0);
+
+                servo2.setPower(0);
+
+            }
+
+
+
+            // Choose to drive using either Tank Mode, or POV Mode
+
+            // Comment out the method that's not used.  The default below is POV.
+
+
+
+            // POV Mode uses left stick to go forward, and right stick to turn.
+
+            // - This uses basic math to combine motions and is easier to drive straight.
+
+            double drive = -gamepad1.left_stick_y;
+
+            double turn = gamepad1.right_stick_x;
+
+            double up = gamepad2.right_stick_y;
+
+            double down = -gamepad2.left_stick_y;
+
+
+
+
+
+
+            leftPower = Range.clip(drive + turn, -1.0, 1.0);
+
+            rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
+            armPower = Range.clip(up - down, -0.5, 0.5);
+
+            stringPower = Range.clip(up - down , -0.5, 0.5);
+            //  servoPosition = Range.clip (servoPosition,0,1);
+
+
+
+
+
+            // Tank Mode uses one stick to control each wheel.
+
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+
+            // leftPower  = -gamepad1.left_stick_y ;
+
+            // rightPower = -gamepad1.right_stick_y ;
+
+
+
+            // Send calculated power to wheels
+
+            leftDrive.setPower(leftPower);
+
+            rightDrive.setPower(rightPower);
+
+            armDrive.setPower(armPower);
+
+            armString.setPower(stringPower);
+
+
+
+            // Show the elapsed game time and wheel power.
+
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+            telemetry.addData("Servo Position", "%.2f", servo1.getPower());
+
+            telemetry.addData("Servo Connection information:",  servo1.getConnectionInfo());
+
+            telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+
+            //telemetry.addData("ID", String.format("%x", sensorRange.getModelID()));
+
+            //telemetry.addData("did time out", Boolean.toString(sensorRange.didTimeoutOccur()));
+
+
+            telemetry.update();
+
+        }
+
+    }
+
+}
