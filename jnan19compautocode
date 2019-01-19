@@ -1,0 +1,182 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import android.text.style.UpdateAppearance;
+
+
+import com.qualcomm.hardware.lynx.commands.core.LynxReadVersionStringCommand;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import com.qualcomm.robotcore.hardware.CRServo;
+
+//import com.qualcomm.robotcore.hardware.CRServoImpl;
+
+import com.qualcomm.robotcore.hardware.CRServoImpl;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import com.qualcomm.robotcore.util.Range;
+
+
+import com.qualcomm.robotcore.hardware.Servo;
+
+
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
+
+
+/**
+ * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+ * <p>
+ * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+ * <p>
+ * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
+ * <p>
+ * class is instantiated on the Robot Controller and executed.
+ * <p>
+ * <p>
+ * <p>
+ * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+ * <p>
+ * It includes all the skeletal structure that all linear OpModes contain.
+ * <p>
+ * <p>
+ * <p>
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * <p>
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
+
+
+@Autonomous(name = "TylerAutonomous", group = "Linear Opmode")
+
+//@Disabled
+
+public class ForwardAutonomous extends TylerOscarOpMode {
+
+
+    /* Declare OpMode members. */
+
+    //HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private DcMotor leftDrive = null;
+
+    private DcMotor rightDrive = null;
+
+    private DistanceSensor sensorRange;
+
+    private DcMotor armDrive =null;
+
+    private DcMotor armString = null;
+
+    private CRServo servo1 = null;
+
+    private CRServo servo2 = null;
+
+
+
+
+    static final double FORWARD_SPEED = 0.6;
+
+    static final double TURN_SPEED = 0.5;
+
+
+    @Override
+    public void runOpMode() {
+
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
+        sensorRange = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_range");
+
+        armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+
+        armString = hardwareMap.get(DcMotor.class, "arm_string");
+
+        servo1 = hardwareMap.get (CRServo.class,"CRServo1");
+
+        servo2 = hardwareMap.get(CRServo.class,"CRServo2");
+
+        telemetry.addData("Status", "Ready to run");    //
+
+        telemetry.update();
+
+        waitForStart();
+
+
+        // Step 1:  Drive forward for 3 seconds
+
+        armDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
+
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+
+            telemetry.update();
+
+        }
+
+
+
+        // Step 2:  Spin right for 1.3 seconds
+
+        //  robot.leftDrive.setPower(TURN_SPEED);
+
+        //robot.rightDrive.setPower(-TURN_SPEED);
+
+        servo1.setDirection(DcMotorSimple.Direction.REVERSE);
+        servo1.setPower(servoPosition);
+
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
+
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+
+            telemetry.update();
+
+        }
+
+
+
+        // Step 3:  Drive forward for 1 Second
+
+
+        leftDrive.setPower(-FORWARD_SPEED);
+
+        rightDrive.setPower(FORWARD_SPEED);
+
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 3))
+
+            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+
+        telemetry.update();}}
+
+
+
+
+
+
+
+
+
+
