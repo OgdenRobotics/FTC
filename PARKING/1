@@ -1,0 +1,208 @@
+package org.firstinspires.ftc.teamcode;
+
+
+//import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
+//import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+//import com.qualcomm.robotcore.hardware.CRServoImpl;
+
+
+
+
+
+/**
+
+ * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+
+ * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+
+ * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
+
+ * class is instantiated on the Robot Controller and executed.
+
+ *
+
+ * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+
+ * It includes all the skeletal structure that all linear OpModes contain.
+
+ *
+
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+
+ */
+
+
+
+@Autonomous(name="ShawnAutoPark", group="Linear Opmode")
+
+//@Disabled
+
+public class ShawnAuto2020 extends LinearOpMode {
+
+
+    // Declare OpMode members.
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private DcMotor leftDrive = null;
+
+    private DcMotor rightDrive = null;
+
+    private DcMotor rightDrive2 = null;
+
+    private DcMotor leftdrive2 = null;
+
+    private DcMotor armDrive =null;
+
+    private DcMotor armString = null;
+
+    private CRServo servo1 = null;
+
+    private Servo servo2 = null;
+
+    ColorSensor sensorColor;
+    //private DistanceSensor sensorRange;
+
+    //private ColorSensor colorSensor;
+
+
+    //private Rev2mDistanceSensor sensorRange;
+
+
+
+    double servoPosition = 0.5;
+
+
+
+    @Override
+
+    public void runOpMode() {
+
+        telemetry.addData("Status", "Initialized");
+
+        telemetry.update();
+
+
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+
+        // to 'get' must correspond to the names assigned during the robot configuration
+
+        // step (using the FTC Robot Controller app on the phone).
+
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
+        leftdrive2 = hardwareMap.get(DcMotor.class,"left_drive2");
+
+        rightDrive2 = hardwareMap.get(DcMotor.class,"right_drive2");
+
+        armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+
+        armString = hardwareMap.get(DcMotor.class, "arm_string");
+
+        servo1 = hardwareMap.get (CRServo.class,"CRServo1");
+
+        servo2 = hardwareMap.get(Servo.class,"CRServo2");
+
+//        sensorColor = hardwareMap.get(ColorSensor.class, "color_sensor");
+
+        //sensorRange = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_range");
+
+        //colorSensor = hardwareMap.colorSensor.get("color");
+        // armservo = hardwareMap.servo.get("arm_servo");
+
+
+
+        // Most robots need the motor on one side to be reversed to drive forward
+
+        // Reverse the motor that runs backwards when connected directly to the ba[==.ttery
+
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        armDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        armString.setDirection(DcMotor.Direction.FORWARD);
+
+        float hsvValues[] = {0F, 0F, 0F};
+
+        final float values[] = hsvValues;
+
+        final double SCALE_FACTOR = 255;
+
+
+
+
+
+//        telemetry.addData("Initial Servo position:", servo1.getDirection());
+//
+//        telemetry.addData("Initial Servo Connection information:", "%s", servo1.getConnectionInfo());
+
+        // Wait for the game to start (driver presses PLAY)
+
+        waitForStart();
+
+        runtime.reset();
+
+
+
+        // run until the end of the match (driver presses STOP)
+
+//       while (opModeIsActive()) {
+//       }
+//        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+//                (int) (sensorColor.green() * SCALE_FACTOR),
+//                (int) (sensorColor.blue() * SCALE_FACTOR),
+//                hsvValues);
+
+            leftDrive.setPower(0.6);
+            leftdrive2.setPower(0.6);
+            rightDrive.setPower(0.6);
+            rightDrive2.setPower(-0.6);
+
+            sleep(781);
+
+            leftDrive.setPower(0.6);
+            rightDrive.setPower(-0.6);
+            leftdrive2.setPower(0.6);
+            rightDrive2.setPower(0.6);
+
+            sleep(510);
+
+            leftDrive.setPower(0.6);
+            rightDrive.setPower(0.6);
+            leftdrive2.setPower(0.6);
+            rightDrive.setPower(-0.6);
+
+            sleep(781);
+
+            //stringed motor activation
+
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+            leftdrive2.setPower(0);
+            rightDrive.setPower(0);
+
+
+            telemetry.update();
+
+//        }
+
+    }
+
+}
